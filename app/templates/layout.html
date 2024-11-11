@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% block head %}
+<meta charset="UTF-8">
+<title>{% block title %}Voice-Magician{% endblock title %}</title>
+{% endblock head %}
+</head>
+<body>
+<header>{% block header %}{% endblock header %}</header>
+<main>
+{% block app %}{% endblock app %}
+{% block bulletin %}{% endblock bulletin %}
+</main>
+<footer>{% block footer %}{% endblock footer %}</footer>
+{% block scripts %}{% endblock scripts %}
+</body>
+</html>

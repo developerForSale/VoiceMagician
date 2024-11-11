@@ -1,0 +1,66 @@
+Generator:
+  default:
+    compile: False
+    source: "local"
+    text_control:
+      #需要转换的文本，支持中文和英文混杂
+      input: ""
+      #是否对文本进行口语化处理
+      refine: True
+
+    timber_control:
+      #预设的音色种子数值，最小为1，最大为4294967295
+      #指定的音色种子值用于生成 spk_emb
+      timbre: "Default"
+      audio_seed: 2
+      #预生成好的 spk_emb使用.pt音色文件或者音色码（字符串表示形式）
+      speaker_embedding: ""
+
+    affective_control:
+      #控制音频情感波动性，范围为 0-1，数字越大，波动性越大
+      temperature: 0.3
+      #控制音频的情感相关性，范围为 0.1-0.9，数字越大，相关性越高
+      top_p: 0.7
+      #控制音频的情感相似性，范围为 1-20，数字越小，相似性越高
+      top_k: 20
+
+    coefficient_control:
+      #动态变分自动编码器
+      DVAE_coefficient: "Default"
+
+    sentence_level_manual_control:
+      oral: "[oral_0]"
+      laugh: "[laugh_0]"
+      break: "[break_0]"
+
+  app_data_set:
+    sentence_level_manual_control:
+      oral:
+        - "[oral_0]"
+        - "[oral_1]"
+        - "[oral_2]"
+        - "[oral_3]"
+        - "[oral_4]"
+        - "[oral_5]"
+        - "[oral_6]"
+        - "[oral_7]"
+        - "[oral_8]"
+        - "[oral_9]"
+      laugh:
+        - "[laugh_0]"
+        - "[laugh_1]"
+        - "[laugh_2]"
+      break:
+        - "[break_0]"
+        - "[break_1]"
+        - "[break_2]"
+        - "[break_3]"
+        - "[break_4]"
+        - "[break_5]"
+        - "[break_6]"
+        - "[break_7]"
+    word_level_manual_control:
+      uv_break: "[uv_break]"
+      laugh: "[laugh]"
+      lbreak: "[lbreak]"
+

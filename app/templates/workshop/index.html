@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% block app %}
+<div id="app">
+    <div id="workshop">
+        <button onclick='get("{{ url_for("resource.default") }}")'>Download Models</button>
+    </div>
+</div>
+<script>
+    // Define a function to send a GET request to the server
+    function get(url) {
+      var request = new XMLHttpRequest();
+      request.open('GET', url, true);
+      request.send();
+    }
+</script>
+{% endblock app %}
+{% block bulletin %}
+{% include "bulletin/connection.html" %}
+<div id="bulletin">
+    <header>
+        <h1>Bulletin</h1>
+    </header>
+    <ul id="blackboard">
+      <li>Here is the bulletin board, where you can see all the notifications.</li>
+    </ul>
+</div>
+{% endblock bulletin %}

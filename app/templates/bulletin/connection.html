@@ -1,0 +1,21 @@
+{% block connection %}
+<script>
+    // Create an EventSource object to connect to the SSE endpoint
+    var eventSource = new EventSource('{{ url_for('bulletin.subscribe') }}');
+
+    eventSource.onopen = () => {
+      console.log('SSE connnected, service state: ', eventSource.readyState);
+    };
+
+    // Define a callback function to handle incoming messages
+    eventSource.onmessage = (event) => {
+      console.log('Received message:', event.data);
+      var el = document.getElementById('blackboard');
+      el.innerHTML += '<li>' + event.data + '</li>';
+    };
+
+    eventSource.onerror = (err) => {
+      eventSource.close();
+    };
+</script>
+{% endblock connection %}
