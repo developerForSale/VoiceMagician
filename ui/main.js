@@ -7,7 +7,7 @@ function createWindow() {
     height: 600,
   });
 
-  win.loadFile(path.join(__dirname, 'dist/ui/index.html'));
+  win.loadFile(path.join(__dirname, 'dist/ui/browser/index.html'));
 }
 
 app.whenReady().then(() => {
