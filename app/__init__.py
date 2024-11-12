@@ -1,11 +1,14 @@
 import os
 
 from flask import Flask
+from flask_cors import CORS
 
 
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+    # when the day comes, check the official documentation of the flask-cors module to learn how to tweak the settings.
+    CORS(app)
     app.config.from_mapping(
         SECRET_KEY='dev'
     )
