@@ -1,5 +1,6 @@
 import re
 import uuid
+import json
 import gevent
 import logging
 
@@ -14,26 +15,22 @@ patch_all()
 
 
 class ServerSentEvent(object):
-    def __init__(self, event: str = '', level: int = logging.NOTSET):
+    def __init__(self, event: str = '', level: int = logging.NOTSET, last: str = None):
         self._event_id = str(uuid.uuid4())
-        self._event = event
-        self._level = level
-        self._str_dict = {
-            'data': self._event,
-            'event': self._level,
+        self._event = {
+            'event': event,
             'id': self._event_id
         }
+        self._type = level
+        self._last_event_id_text = ''
+        if last is not None:
+            self._last_event_id_text = "\nLast-Event-ID: {}".format(last)
 
     def get_id(self) -> str:
         return self._event_id
 
     def encode(self) -> str:
-        if not self._event:
-            return ''
-        event_str = [
-            "{}: {}".format(key, name) for key, name in self._str_dict.items()
-        ]
-        return "{}\n\n".format("\n".join(event_str))
+        return "event: {}\ndata: {}{}\n\n".format(self._type, json.dumps(self._event), self._last_event_id_text)
 
 
 # Thanks to Samuel Carlsson's idea from https://github.com/singingwolfboy/flask-sse/issues/7
@@ -48,7 +45,7 @@ class Bulletin(object):
     def __init__(self):
         if not hasattr(self, '_initialized'):
             self.subscriptions = []
-            self.history = deque(maxlen=32)
+            self.history = deque(maxlen=20)
             self.history.append(ServerSentEvent('Notification bulletin initialized.', logging.INFO))
             self._initialized = True
 
@@ -94,12 +91,12 @@ class Bulletin(object):
             sub.put(message)
 
     def publish(self, level: int = logging.NOTSET, event: str = ''):
-        sse = ServerSentEvent(level=level, event=event)
+        sse = ServerSentEvent(level=level, event=event, last=self.get_last_id())
         self.history.append(sse)
         gevent.spawn(self.notify, sse)
 
-    # def get_last_id(self) -> str:
-    #     return self.history[-1].get_id()
+    def get_last_id(self) -> str:
+        return self.history[-1].get_id()
 
 
 bulletin = Bulletin()
