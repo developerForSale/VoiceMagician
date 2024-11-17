@@ -31,7 +31,7 @@ class ServerSentEvent(object):
         if not self._event:
             return ''
         event_str = [
-            "{}: {}".format(key, name) for key, name in self._str_dict.items() if key
+            "{}: {}".format(key, name) for key, name in self._str_dict.items()
         ]
         return "{}\n\n".format("\n".join(event_str))
 
