@@ -15,23 +15,25 @@ patch_all()
 
 
 class ServerSentEvent(object):
-    def __init__(self, event: str = '', level: int = logging.NOTSET, last: str = None):
+    def __init__(self, event: str = '', level: int = logging.NOTSET, last: str = ''):
         self._event_id = str(uuid.uuid4())
+        self._event_type = level
         self._event = {
             'event': event,
+            'type': self._event_type,
             'id': self._event_id
         }
-        self._type = level
-        self._last_event_id_text = ''
-        if last is not None:
-            self._last_event_id_text = "\nLast-Event-ID: {}".format(last)
+        self._last_event_id_text = last
 
     def get_id(self) -> str:
         return self._event_id
 
     def encode(self) -> str:
-        return "event: {}\ndata: {}{}\n\n".format(self._type, json.dumps(self._event), self._last_event_id_text)
-
+        lines = [
+            'data: {}'.format(json.dumps(self._event)),
+            'id: {}'.format(self._event_id)
+        ]
+        return "\n".join(lines) + "\n\n"
 
 # Thanks to Samuel Carlsson's idea from https://github.com/singingwolfboy/flask-sse/issues/7
 class Bulletin(object):
@@ -79,9 +81,10 @@ class Bulletin(object):
     def subscribe(self):
         def gen(last_id) -> Iterator[str]:
             for sse in self.event_generator(last_id):
+                print(sse.encode())
                 yield sse.encode()
         return Response(
-            gen(request.headers.get('Last-Event-ID')),
+            gen(request.headers.get('lastEventId')),
             mimetype="text/event-stream"
         )
 
