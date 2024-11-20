@@ -21,7 +21,10 @@ export class NotificationComponent {
   lastEvent: any;
   isBulletinUnfolded: boolean = false;
 
-  constructor(private eventSourceService: EventSourceService, private store: Store<NotificationState>) {
+  constructor(
+    private eventSourceService: EventSourceService,
+    private store: Store<NotificationState>
+  ) {
     const url = API_PATH.SUBSCRIBE_NOTIFICATION;
     const options = { withCredentials: false };
     const eventNames: string[] = [];
@@ -29,8 +32,8 @@ export class NotificationComponent {
     this.eventSourceSubscription = this.eventSourceService
       .connectToServerSentEvents(url, options, eventNames)
       .subscribe({
-        next: (event) => {
-          // Problem with server-sent event data type, it's a string, not object
+        next: (event: EventType) => {
+          this.store.dispatch(SSEActions.eventReceived({ event }));
         },
         error: (error) => {
           this.store.dispatch(SSEActions.errorAlarm({ error }));

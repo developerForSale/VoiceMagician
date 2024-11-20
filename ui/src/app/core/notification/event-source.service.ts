@@ -1,5 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Observable, Subscriber } from 'rxjs';
+import { v4 as uuid4 } from 'uuid';
+import { EventType } from './store/notification.reducer';
 
 /**
  * Server-Sent Events service
@@ -32,29 +34,43 @@ export class EventSourceService {
    * Method for establishing connection and subscribing to events from SSE
    * @param url - SSE server api path
    * @param options - configuration object for SSE
-   * @param eventNames - all event names except error (listens by default) you want to listen to
+   * @param eventTypes - all event types except error (listens by default) you want to listen to
    */
   connectToServerSentEvents(
     url: string,
     options: EventSourceInit,
-    eventNames: string[] = []
-  ): Observable<Event> {
+    eventTypes: string[] = []
+  ): Observable<EventType> {
     this.eventSource = this.getEventSource(url, options);
 
-    return new Observable((subscriber: Subscriber<Event>) => {
+    return new Observable((subscriber: Subscriber<EventType>) => {
       if (this.eventSource) {
-        this.eventSource.onerror = (error) => {
-          this.zone.run(() => subscriber.error(error));
+        this.eventSource.onerror = (error: Event) => {
+          console.error(error);
+          var errorMessage: string = 'Unknown error.';
+          if (this.eventSource?.readyState === EventSource.CONNECTING) {
+            errorMessage = 'SSE connection failed: still connecting. (readyState: CONNECTING)'
+          } else if (this.eventSource?.readyState === EventSource.CLOSED) {
+            errorMessage = 'SSE connection failed: closed. (readyState: CLOSED)'
+          }
+          const errorEvent: EventType = {
+            event: errorMessage,
+            type: error.type,
+            id: uuid4(),
+          }
+          this.zone.run(() => subscriber.error(errorEvent));
         };
 
-        if (!eventNames.length) {
-          this.eventSource.onmessage = (event) => {
-            this.zone.run(() => subscriber.next(event.data));
+        if (!eventTypes.length) {
+          this.eventSource.onmessage = (event: MessageEvent) => {
+            const newEvent: EventType = JSON.parse(event.data);
+            this.zone.run(() => subscriber.next(newEvent));
           };
         } else {
-          eventNames.forEach((event: string) => {
-            this.eventSource?.addEventListener(event, (data) => {
-              this.zone.run(() => subscriber.next(data.data));
+          eventTypes.forEach((type: string) => {
+            this.eventSource?.addEventListener(type, (event: MessageEvent) => {
+              const newEvent: EventType = JSON.parse(event.data);
+              this.zone.run(() => subscriber.next(newEvent));
             });
           });
         }

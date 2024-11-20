@@ -2,23 +2,16 @@ import { createReducer, on } from '@ngrx/store';
 import { BulletinActions, SSEActions } from './notification.actions';
 
 export interface EventType {
-  data: string;
   event: string;
+  type: string;
   id: string;
 }
-
-export interface ErrorType {
-  error: string;
-  id: string;
-}
-
-type EventOrError = EventType | ErrorType;
 
 export interface NotificationState {
   isSubscribed: boolean;
   isBulletinUnfolded: boolean;
   alarmIds: string[];
-  events: EventOrError[];
+  events: EventType[];
 }
 
 export const initialState: NotificationState = {

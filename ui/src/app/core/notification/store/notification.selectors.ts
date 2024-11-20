@@ -1,5 +1,12 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { NotificationState } from './notification.reducer';
+import { EventType, NotificationState } from './notification.reducer';
 
-const selectNotificationState = createFeatureSelector<NotificationState>('notification');
-export const selectLastEvent = createSelector(selectNotificationState, (state) => state.events[state.events.length - 1]);
+const selectNotificationState =
+  createFeatureSelector<NotificationState>('notification');
+export const selectLastEvent = createSelector(
+  selectNotificationState,
+  (state) => {
+    if (state.events.length === 0) return null;
+    else return state.events[state.events.length - 1];
+  }
+);

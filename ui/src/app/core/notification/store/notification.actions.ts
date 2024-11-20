@@ -4,7 +4,7 @@ import {
   emptyProps,
   props,
 } from '@ngrx/store';
-import { EventType, ErrorType } from './notification.reducer';
+import { EventType } from './notification.reducer';
 
 export const BulletinActions = createActionGroup({
   source: 'Bulletin',
@@ -18,7 +18,7 @@ export const SSEActions = createActionGroup({
   source: 'SSE',
   events: {
     'Event Received': props<{ event: EventType }>(),
-    'Error Alarm': props<{ error: ErrorType }>(),
+    'Error Alarm': props<{ error: EventType }>(),
     'Stop Alarm': props<{ errorId: string }>(),
   },
 });
