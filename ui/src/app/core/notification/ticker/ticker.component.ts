@@ -19,6 +19,6 @@ export class TickerComponent {
   constructor(private store: Store<NotificationState>) {}
 
   onClick() {
-    this.store.dispatch(BulletinActions.unfold());
+    this.store.dispatch(BulletinActions.show());
   }
 }

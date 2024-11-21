@@ -1,0 +1,19 @@
+.vm-bulletin {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: auto;
+  height: 400px;
+  background-color: #f0f0f0;
+  /* border: 1px solid #ddd; */
+  z-index: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.vm-bulletin.ng-hide {
+  opacity: 0;
+}
+
+.vm-ticker {
+
+}

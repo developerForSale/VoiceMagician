@@ -9,8 +9,8 @@ import { EventType } from './notification.reducer';
 export const BulletinActions = createActionGroup({
   source: 'Bulletin',
   events: {
-    Unfold: emptyProps(),
-    Fold: emptyProps(),
+    Show: emptyProps(),
+    Hide: emptyProps(),
   },
 });
 

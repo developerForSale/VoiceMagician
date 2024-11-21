@@ -1,4 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
+import { AsyncPipe} from '@angular/common';
 import { EventSourceService } from './event-source.service';
 import { Subscription } from 'rxjs';
 
@@ -8,18 +9,18 @@ import { API_PATH } from '../../env';
 import { Store } from '@ngrx/store';
 import { SSEActions } from './store/notification.actions';
 import { EventType, NotificationState } from './store/notification.reducer';
+import { selectIsBulletinShown } from './store/notification.selectors';
 
 @Component({
   selector: 'app-notification',
   standalone: true,
-  imports: [TickerComponent, BulletinComponent],
+  imports: [TickerComponent, BulletinComponent, AsyncPipe],
   templateUrl: './notification.component.html',
   styleUrl: './notification.component.css',
 })
 export class NotificationComponent {
   private readonly eventSourceSubscription: Subscription;
-  lastEvent: any;
-  isBulletinUnfolded: boolean = false;
+  isBulletinShown$ = this.store.select(selectIsBulletinShown)
 
   constructor(
     private eventSourceService: EventSourceService,

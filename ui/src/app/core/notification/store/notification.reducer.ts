@@ -9,27 +9,27 @@ export interface EventType {
 
 export interface NotificationState {
   isSubscribed: boolean;
-  isBulletinUnfolded: boolean;
+  isBulletinShown: boolean;
   alarmIds: string[];
   events: EventType[];
 }
 
 export const initialState: NotificationState = {
   isSubscribed: false,
-  isBulletinUnfolded: false,
+  isBulletinShown: false,
   alarmIds: [],
   events: [],
 };
 
 export const notificationReducer = createReducer(
   initialState,
-  on(BulletinActions.unfold, (state) => ({
+  on(BulletinActions.show, (state) => ({
     ...state,
-    isBulletinUnfolded: true,
+    isBulletinShown: true,
   })),
-  on(BulletinActions.fold, (state) => ({
+  on(BulletinActions.hide, (state) => ({
     ...state,
-    isBulletinUnfolded: false,
+    isBulletinShown: false,
   })),
   on(SSEActions.eventReceived, (state, { event }) => ({
     ...state,
