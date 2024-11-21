@@ -1,5 +1,7 @@
+<div class="vm-ticker-layout">
 @if ((event$ | async) === null) {
   <p>connecting...</p>
 } @else {
   <p>{{event$ | async | json}}</p>
 }
+</div>

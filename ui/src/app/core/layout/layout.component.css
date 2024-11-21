@@ -1,0 +1,13 @@
+.vm-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* take up full viewport height */
+}
+
+.vm-tabs {
+  flex: 1; /* take up remaining space */
+}
+
+.vm-footer {
+  flex: none; /* take up only the space needed for the footer content */
+}
