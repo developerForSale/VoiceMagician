@@ -9,7 +9,7 @@ import uuid
 class ChatttsTest(unittest.TestCase):
     def test_spk_generator(self):
         chat = ChatTTS.Chat()
-        chat.load(compile=False)
+        chat.load(compile=False, source="huggingface", force_redownload=True)
 
         text = """人猿相揖别。[uv_break]只几个石头磨过，[uv_break]小儿时节。
                  [uv_break]铜铁炉中翻火焰，[uv_break]为问何时猜得，[uv_break]不过几千寒热。

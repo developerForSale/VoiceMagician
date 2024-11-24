@@ -14,6 +14,16 @@ from gevent.monkey import patch_all
 patch_all()
 
 
+# Handle logging for the SSE.
+class LoggerHandler(logging.Handler):
+    def __init__(self, bulletin_instance):
+        self.bulletin = bulletin_instance
+        super().__init__()
+
+    def emit(self, record):
+        self.bulletin.publish(event=record.getMessage(), level=record.levelno)
+
+
 class ServerSentEvent(object):
     def __init__(self, event: str = '', level: int = logging.NOTSET, last: str = ''):
         self._event_id = str(uuid.uuid4())
@@ -34,6 +44,7 @@ class ServerSentEvent(object):
             'id: {}'.format(self._event_id)
         ]
         return "\n".join(lines) + "\n\n"
+
 
 # Thanks to Samuel Carlsson's idea from https://github.com/singingwolfboy/flask-sse/issues/7
 class Bulletin(object):
