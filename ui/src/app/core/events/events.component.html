@@ -1,0 +1,20 @@
+<div class="events-container">
+  <div class="ticker-container" cdkOverlayOrigin #trigger="cdkOverlayOrigin" (click)="isBulletinShown = true">
+    @if ((theLatestEvent$ | async) === null) {
+    <app-event-bubble [event]="null"></app-event-bubble>
+    } @else {
+    <app-event-bubble [event]="theLatestEvent$ | async"></app-event-bubble>
+    }
+  </div>
+</div>
+
+<ng-template cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isBulletinShown"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  (backdropClick)="isBulletinShown = false"
+  [cdkConnectedOverlayHeight]="'60%'"
+  [cdkConnectedOverlayMinHeight]="'40%'"
+>
+  <app-bulletin></app-bulletin>
+</ng-template>

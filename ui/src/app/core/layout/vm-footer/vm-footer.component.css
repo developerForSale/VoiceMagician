@@ -5,19 +5,17 @@
   box-sizing: border-box;
 }
 
-.vm-footer-ticker {
+.vm-events {
   flex: auto;
   min-width: 0;
 
   background-color: #f0f0f0;
-  padding: 10px;
 }
 
-.vm-footer-status {
+.vm-status {
   flex: none;
 
   background-color: #333;
   color: #fff;
-  padding: 10px;
   text-align: right;
 }

@@ -1,5 +1,0 @@
-.ticker-container > span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}

@@ -1,0 +1,7 @@
+<div class="event-bubble-container">
+  @if (event === null) {
+    <span>Connecting...</span>
+  } @else {
+    <span>{{ event | json }}</span>
+  }
+</div>

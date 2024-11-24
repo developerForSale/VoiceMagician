@@ -1,0 +1,4 @@
+<div class="bulletin-container">
+  <span>bulletin works!</span>
+  <app-event-bubble *ngFor="let event of events$ | async" [event]="event"></app-event-bubble>
+</div>

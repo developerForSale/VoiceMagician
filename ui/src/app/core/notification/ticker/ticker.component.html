@@ -1,7 +1,0 @@
-<div class="ticker-container" (click)="onClick()">
-  @if ((event$ | async) === null) {
-    <span>Connecting...</span>
-  } @else {
-    <span>{{event$ | async | json}}</span>
-  }
-</div>
