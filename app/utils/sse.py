@@ -11,6 +11,7 @@ from gevent.queue import Queue
 
 # Some frameworks, such as gunicorn, handle monkey-patching for you. Check their documentation to be sure.
 from gevent.monkey import patch_all
+
 patch_all()
 
 
@@ -92,8 +93,8 @@ class Bulletin(object):
     def subscribe(self):
         def gen(last_id) -> Iterator[str]:
             for sse in self.event_generator(last_id):
-                print(sse.encode())
                 yield sse.encode()
+
         return Response(
             gen(request.headers.get('lastEventId')),
             mimetype="text/event-stream"
@@ -116,8 +117,36 @@ class Bulletin(object):
 bulletin = Bulletin()
 
 
-def console_output_handler(event: str = '', level: int = logging.NOTSET):
-    def remove_ansi_escape_sequences(text):
-        return re.sub(r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?', '', text)
+# Handle RSV executor console output from ChatTTS models download process
+def remove_ansi_escape_sequences(text):
+    """There are colors encoded in the output. Remove them."""
+    return re.sub(r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?', '', text)
+
+
+def classify_and_wrap_data(text):
+    level_str, event_str = text.split(' ', 1)
+    level = logging.NOTSET
+    if level_str == '[INFO]':
+        level = logging.INFO
+    elif level_str == '[WARNING]':
+        level = logging.WARNING
+    elif level_str == '[ERROR]':
+        level = logging.ERROR
+    elif level_str == '[FATAL]' or level_str == '[PANIC]':
+        level = logging.CRITICAL
+    phase = 0
+    detail_type = 'plain'
+    detail_str = event_str
+    if event_str.startswith('#'):
+        phase_str, detail_str = event_str.split(' ', 1)
+        phase = phase_str.lstrip('#')
+        if detail_str.startswith('['):
+            detail_type = 'progress'
+    return level, {'phase': phase, 'type': detail_type, 'detail': detail_str}
+
+
+def console_output_handler(event: str = ''):
+    """For RSV executor from ChatTTS."""
     clean_text = remove_ansi_escape_sequences(event)
-    Bulletin.get_instance().publish(level=level, event=clean_text)
+    level, detail = classify_and_wrap_data(clean_text)
+    Bulletin.get_instance().publish(level=level, event=detail)
