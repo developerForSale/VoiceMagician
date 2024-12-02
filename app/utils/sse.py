@@ -28,10 +28,10 @@ class LoggerHandler(logging.Handler):
 class ServerSentEvent(object):
     def __init__(self, event: str = '', level: int = logging.NOTSET, last: str = ''):
         self._event_id = str(uuid.uuid4())
-        self._event_type = level
+        self._event_level = level
         self._event = {
             'event': event,
-            'type': self._event_type,
+            'level': str(self._event_level),
             'id': self._event_id
         }
         self._last_event_id_text = last
@@ -105,7 +105,7 @@ class Bulletin(object):
         for sub in self.subscriptions[:]:
             sub.put(message)
 
-    def publish(self, level: int = logging.NOTSET, event: str = ''):
+    def publish(self, event, level: int = logging.NOTSET):
         sse = ServerSentEvent(level=level, event=event, last=self.get_last_id())
         self.history.append(sse)
         gevent.spawn(self.notify, sse)
@@ -117,13 +117,14 @@ class Bulletin(object):
 bulletin = Bulletin()
 
 
-# Handle RSV executor console output from ChatTTS models download process
-def remove_ansi_escape_sequences(text):
+########################################################################################################################
+# Handle RSV executor console output from ChatTTS models download process.
+def _remove_ansi_escape_sequences(text):
     """There are colors encoded in the output. Remove them."""
     return re.sub(r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?', '', text)
 
 
-def classify_and_wrap_data(text):
+def _classify_and_wrap_data(text, group_id):
     level_str, event_str = text.split(' ', 1)
     level = logging.NOTSET
     if level_str == '[INFO]':
@@ -134,19 +135,20 @@ def classify_and_wrap_data(text):
         level = logging.ERROR
     elif level_str == '[FATAL]' or level_str == '[PANIC]':
         level = logging.CRITICAL
-    phase = 0
-    detail_type = 'plain'
-    detail_str = event_str
+    phase = '0'
+    info_type = 'plain'
+    info_str = event_str
     if event_str.startswith('#'):
-        phase_str, detail_str = event_str.split(' ', 1)
+        phase_str, info_str = event_str.split(' ', 1)
         phase = phase_str.lstrip('#')
-        if detail_str.startswith('['):
-            detail_type = 'progress'
-    return level, {'phase': phase, 'type': detail_type, 'detail': detail_str}
+        if info_str.startswith('['):
+            info_type = 'progress'
+    return level, {'group': group_id, 'RSVePhase': phase, 'type': info_type, 'info': info_str}
 
 
-def console_output_handler(event: str = ''):
+def console_output_handler(event: str, group_id: str):
     """For RSV executor from ChatTTS."""
-    clean_text = remove_ansi_escape_sequences(event)
-    level, detail = classify_and_wrap_data(clean_text)
-    Bulletin.get_instance().publish(level=level, event=detail)
+    clean_text = _remove_ansi_escape_sequences(event)
+    level, event = _classify_and_wrap_data(clean_text, group_id)
+    Bulletin.get_instance().publish(level=level, event=event)
+########################################################################################################################
