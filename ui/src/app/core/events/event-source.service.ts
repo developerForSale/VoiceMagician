@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Observable, Subscriber } from 'rxjs';
 import { v4 as uuid4 } from 'uuid';
-import { EventType } from './store/notification.reducer';
+import { errorLevel, EventType } from './store/notification.reducer';
 
 /**
  * Server-Sent Events service
@@ -55,7 +55,7 @@ export class EventSourceService {
           }
           const errorEvent: EventType = {
             event: errorMessage,
-            type: error.type,
+            level: errorLevel,
             id: uuid4(),
           }
           this.zone.run(() => subscriber.error(errorEvent));

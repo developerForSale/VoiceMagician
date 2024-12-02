@@ -6,14 +6,6 @@ import {
 } from '@ngrx/store';
 import { EventType } from './notification.reducer';
 
-export const BulletinActions = createActionGroup({
-  source: 'Bulletin',
-  events: {
-    Show: emptyProps(),
-    Hide: emptyProps(),
-  },
-});
-
 export const SSEActions = createActionGroup({
   source: 'SSE',
   events: {

@@ -1,5 +1,5 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { EventType, NotificationState } from './notification.reducer';
+import { NotificationState } from './notification.reducer';
 
 const selectNotificationState =
   createFeatureSelector<NotificationState>('notification');
@@ -16,18 +16,18 @@ export const selectAlarmIds = createSelector(
 
 export const selectEventByIds = (id: string[]) => createSelector(
   selectNotificationState,
-  (state) => state.events.filter((event) => id.includes(event.id))
+  (state) => id.map((id) => state.events.eventRecords[id])
 )
 
 export const selectLastEvent = createSelector(
   selectNotificationState,
   (state) => {
-    if (state.events.length === 0) return null;
-    else return state.events[state.events.length - 1];
+    if (state.events.idList.length === 0) return null;
+    else return state.events.eventRecords[state.events.idList[state.events.idList.length - 1]];
   }
 );
 
 export const selectEvents = createSelector(
   selectNotificationState,
-  (state) => state.events
+  (state) => state.events.idList.map((id) => state.events.eventRecords[id])
 );
