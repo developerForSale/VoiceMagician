@@ -13,11 +13,10 @@ import { EventType, NotificationState } from './store/notification.reducer';
 import { selectLastEvent } from './store/notification.selectors';
 
 @Component({
-  selector: 'app-events',
-  standalone: true,
-  imports: [ OverlayModule, BulletinComponent, EventBubbleComponent, AsyncPipe ],
-  templateUrl: './events.component.html',
-  styleUrl: './events.component.css',
+    selector: 'app-events',
+    imports: [OverlayModule, BulletinComponent, EventBubbleComponent, AsyncPipe],
+    templateUrl: './events.component.html',
+    styleUrl: './events.component.css'
 })
 export class EventsComponent {
   private readonly eventSourceSubscription: Subscription;

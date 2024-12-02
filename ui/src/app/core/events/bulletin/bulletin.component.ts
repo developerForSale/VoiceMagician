@@ -7,11 +7,10 @@ import { selectEvents } from '../store/notification.selectors';
 import { NotificationState } from '../store/notification.reducer';
 
 @Component({
-  selector: 'app-bulletin',
-  standalone: true,
-  imports: [EventBubbleComponent, NgFor, AsyncPipe],
-  templateUrl: './bulletin.component.html',
-  styleUrl: './bulletin.component.css',
+    selector: 'app-bulletin',
+    imports: [EventBubbleComponent, NgFor, AsyncPipe],
+    templateUrl: './bulletin.component.html',
+    styleUrl: './bulletin.component.css'
 })
 export class BulletinComponent {
   public events$ = this.store.select(selectEvents);

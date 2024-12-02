@@ -2,11 +2,10 @@ import { Component, Input } from '@angular/core';
 import { EventRecord } from '../store/notification.reducer';
 
 @Component({
-  selector: 'app-event-bubble',
-  standalone: true,
-  imports: [],
-  templateUrl: './event-bubble.component.html',
-  styleUrl: './event-bubble.component.css'
+    selector: 'app-event-bubble',
+    imports: [],
+    templateUrl: './event-bubble.component.html',
+    styleUrl: './event-bubble.component.css'
 })
 export class EventBubbleComponent {
   @Input() event: EventRecord | null = null;
