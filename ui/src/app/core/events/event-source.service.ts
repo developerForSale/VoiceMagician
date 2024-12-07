@@ -46,7 +46,6 @@ export class EventSourceService {
     return new Observable((subscriber: Subscriber<EventType>) => {
       if (this.eventSource) {
         this.eventSource.onerror = (error: Event) => {
-          console.error(error);
           var errorMessage: string = 'Unknown error.';
           if (this.eventSource?.readyState === EventSource.CONNECTING) {
             errorMessage = 'SSE connection failed: still connecting. (readyState: CONNECTING)'

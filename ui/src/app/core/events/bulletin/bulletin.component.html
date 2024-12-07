@@ -1,4 +1,34 @@
 <div class="bulletin-container">
-  <span>bulletin works!</span>
-  <app-event-bubble *ngFor="let event of events$ | async" [event]="event"></app-event-bubble>
+  <div class="bulletin-events-container">
+    <mat-tab-group [selectedIndex]="eventsPanelSelected.value"
+                   (selectedIndexChange)="eventsPanelSelected.setValue($event)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="bulletin-event-tab-label">
+            <span>All Events</span>
+          </div>
+        </ng-template>
+
+        @for (event of (events$ | async); track event; let i = $index) {
+        <app-event-bubble [event]="event" [index]="i" (expandGroupEvent)="expandGroup($event)"></app-event-bubble>
+        }
+      </mat-tab>
+
+      @for (group of expandedGroups; track group; let index = $index) {
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="bulletin-event-tab-label">
+            <span>group</span>
+            <button mat-raised-button 
+                    class="bulletin-close-tab-button" 
+                    (click)="closeTab(index)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </ng-template>
+        {{ expandedGroups[index] }}
+      </mat-tab>
+      }
+    </mat-tab-group>
+  </div>
 </div>

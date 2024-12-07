@@ -2,23 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  justify-content: flex-end;
 
   height: 100%;
   width: 100%;
   
   background-color: #f0f0f0;
   border: 1px solid #333;
-}
-
-.ticker-container {
-  flex: auto;
-}
-.ticker-container > span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.bulletin-board-container {
-  flex: auto;
 }

@@ -1,18 +1,28 @@
-<div class="event-bubble-container">
+<div class="event-bubble-container" (click)="onExpandRequired()">
+  @if (index !== null) {
+  <div class="index">
+    <span>{{ index + 1 }}</span>
+  </div>
+  }
+  @if ( isTagged ) {
   <div class="tag">
     <span>{{ level }}</span>
   </div>
+  }
   <div class="info">
     @if (event === null) {
-      <span>Connecting...</span>
+    <span></span>
     } @else {
-      <span>
-        @if (event.event.hasOwnProperty('group')) {
-
-        } @else {
-          <span>{{ event.event }}</span>
-        }
-      </span>
+    @if ( isExpanded ) {
+    <div>
+      <span class="grouped-badge">(events folded)</span>
+      @if ( isRSVeEvent ) {
+      <span>{{ event.event.info }}</span>
+      }
+    </div>
+    } @else {
+    <span>{{ event.event }}</span>
+    }
     }
   </div>
 </div>

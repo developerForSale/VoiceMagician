@@ -9,6 +9,7 @@ import { SSEActions } from './notification.actions';
  */
 type RSVeEvent = {
   info: string;
+  // type: 'plain' or 'progress'
   type: string;
   // Phases like: 0, 1, 2, 3, 3.1, 3.2, 3.2.1, etc.
   RSVePhase: string;
@@ -19,7 +20,7 @@ type RSVeEvent = {
 export const errorLevel = '40';
 
 export type EventType = {
-  event: string | RSVeEvent;
+  event: any;
   level: string;
   id: string;
 }
@@ -44,7 +45,7 @@ type RSVePhaseNode = {
  * NgRx store data structure.
  */
 export type EventRecord = {
-  event: string | RSVeEvent;
+  event: any;
   level: string;
 }
 
@@ -130,7 +131,7 @@ export const notificationReducer = createReducer(
         ...state.events.eventRecords,
         [error.id]: {
           event: error.event,
-          level: errorLevel,
+          level: error.level,
         },
       },
     },

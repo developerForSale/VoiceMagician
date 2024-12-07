@@ -14,3 +14,11 @@ export const SSEActions = createActionGroup({
     'Stop Alarm': props<{ errorId: string }>(),
   },
 });
+
+export const BulletinActions = createActionGroup({
+  source: 'Bulletin',
+  events: {
+    'Expand Event Group': props<{ groupId: string }>(),
+    'Close Event Group Tab': props<{ groupId: string }>(),
+  },
+});
