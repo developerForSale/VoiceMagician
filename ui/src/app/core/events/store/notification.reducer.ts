@@ -29,7 +29,7 @@ export type EventType = {
 /**
  * Data structure of RSV executor events store.
  */
-type RSVePhaseNode = {
+export type RSVePhaseNode = {
   phase: string;
   // nexPhase means 0 -> 1 or 1.1 -> 1.2, it's not always obeying the sequence.
   nextPhase: RSVePhaseNode | null;
@@ -204,7 +204,7 @@ function addNewRSVeEvent(
       // If the group already exists, find the right node to add the event.
       var group = cloneDeep(eventGroups[event.event.group]);
       var node = findOrCreateTheNode(group, event.event.RSVePhase);
-      node.events === null ? [event.id] : [...node.events, event.id];
+      node.events = node.events === null ? [event.id] : [...node.events, event.id];
     } else {
       // Create a new group if the group does not exist.
       group = {

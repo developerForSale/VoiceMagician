@@ -31,3 +31,8 @@ export const selectEvents = createSelector(
   selectNotificationState,
   (state) => state.events.idList.map((id) => state.events.eventRecords[id])
 );
+
+export const selectRSVeEventGroupByIds = (groupIds: string[]) => createSelector(
+  selectNotificationState,
+  (state) => groupIds.map((id) => state.events.RSVeEventGroups[id])
+);

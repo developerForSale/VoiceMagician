@@ -1,20 +1,22 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { AsyncPipe} from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { EventBubbleComponent } from '../event-bubble/event-bubble.component';
 
 import { Store } from '@ngrx/store';
-import { selectEvents } from '../store/notification.selectors';
-import { NotificationState } from '../store/notification.reducer';
-import { BulletinActions } from '../store/notification.actions';
+import { Observable } from 'rxjs';
+import { selectEvents, selectRSVeEventGroupByIds } from '../store/notification.selectors';
+import { NotificationState, RSVePhaseNode } from '../store/notification.reducer';
+
 
 @Component({
     selector: 'app-bulletin',
     imports: [
       EventBubbleComponent,
       AsyncPipe,
+      JsonPipe,
       MatIconModule,
       MatTabsModule,
     ],
@@ -24,20 +26,22 @@ import { BulletinActions } from '../store/notification.actions';
 export class BulletinComponent {
   public events$ = this.store.select(selectEvents);
   public expandedGroups: string[] = [];
-  //public expandedGroups$ = this.store.select(selectExpandedEventGroups);
-  eventsPanelSelected = new FormControl(0);
+  public expandedGroups$: Observable<RSVePhaseNode[]> = this.store.select(selectRSVeEventGroupByIds(this.expandedGroups));
+  tabSelected = new FormControl(0);
 
   constructor(private store: Store<NotificationState>) {}
 
   expandGroup(group: string) {
-    this.store.dispatch(BulletinActions.expandEventGroup({ groupId: group }));
-    this.expandedGroups.push(group);
-    this.eventsPanelSelected.setValue(this.expandedGroups.length);
+    if (this.expandedGroups.includes(group)) {
+      this.tabSelected.setValue(this.expandedGroups.indexOf(group) + 1);
+    } else {
+      this.expandedGroups.push(group);
+      this.tabSelected.setValue(this.expandedGroups.length);
+    }
   }
 
   closeTab(index: number) {
-    this.store.dispatch(BulletinActions.closeEventGroupTab({ groupId: this.expandedGroups[index] }));
     this.expandedGroups.splice(index, 1);
-    this.eventsPanelSelected.setValue(index)
+    this.tabSelected.setValue(index)
   }
 }

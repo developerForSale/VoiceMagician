@@ -1,32 +1,32 @@
 <div class="bulletin-container">
   <div class="bulletin-events-container">
-    <mat-tab-group [selectedIndex]="eventsPanelSelected.value"
-                   (selectedIndexChange)="eventsPanelSelected.setValue($event)">
+    <mat-tab-group [selectedIndex]="tabSelected.value" (selectedIndexChange)="tabSelected.setValue($event)">
       <mat-tab>
         <ng-template mat-tab-label>
           <div class="bulletin-event-tab-label">
             <span>All Events</span>
           </div>
         </ng-template>
-
-        @for (event of (events$ | async); track event; let i = $index) {
-        <app-event-bubble [event]="event" [index]="i" (expandGroupEvent)="expandGroup($event)"></app-event-bubble>
-        }
+        <div class="bulletin-tab-content">
+          @for (event of (events$ | async); track event; let i = $index) {
+          <app-event-bubble [event]="event" [index]="i" (expandGroupEvent)="expandGroup($event)"></app-event-bubble>
+          }
+        </div>
       </mat-tab>
 
-      @for (group of expandedGroups; track group; let index = $index) {
+      @for (group of expandedGroups$ | async; track group; let index = $index) {
       <mat-tab>
         <ng-template mat-tab-label>
           <div class="bulletin-event-tab-label">
             <span>group</span>
-            <button mat-raised-button 
-                    class="bulletin-close-tab-button" 
-                    (click)="closeTab(index)">
+            <button mat-raised-button class="bulletin-close-tab-button" (click)="closeTab(index)">
               <mat-icon>close</mat-icon>
             </button>
           </div>
         </ng-template>
-        {{ expandedGroups[index] }}
+        <div class="bulletin-tab-content">
+          {{ group | json }}
+        </div>
       </mat-tab>
       }
     </mat-tab-group>
