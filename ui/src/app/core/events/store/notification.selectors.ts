@@ -1,5 +1,5 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { NotificationState } from './notification.reducer';
+import { NotificationState, RSVePhaseNode } from './notification.reducer';
 
 const selectNotificationState =
   createFeatureSelector<NotificationState>('notification');
@@ -32,7 +32,14 @@ export const selectEvents = createSelector(
   (state) => state.events.idList.map((id) => state.events.eventRecords[id])
 );
 
-export const selectRSVeEventGroupByIds = (groupIds: string[]) => createSelector(
+export const selectRSVeEventGroupById = (groupId: string) => createSelector(
   selectNotificationState,
-  (state) => groupIds.map((id) => state.events.RSVeEventGroups[id])
+  (state) => {
+    return {
+      phase: 'Fake Root of RSVeEventGroup Tree, let childrenAccessor processes the selected data before assign it to dataSource.',
+      nextPhase: null,
+      subPhase: state.events.RSVeEventGroups[groupId],
+      events: null
+    } as RSVePhaseNode
+  }
 );

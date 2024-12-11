@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { EventSourceService } from './event-source.service';
 import { BulletinComponent } from './bulletin/bulletin.component';
-import { EventBubbleComponent } from './event-bubble/event-bubble.component';
+import { EventBubbleComponent } from './bulletin/event-bubble/event-bubble.component';
 import { API_PATH } from '../../env';
 import { Store } from '@ngrx/store';
 import { SSEActions } from './store/notification.actions';
