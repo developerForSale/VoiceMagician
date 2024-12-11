@@ -14,18 +14,18 @@
         </div>
       </mat-tab>
 
-      @for (group of expandedGroups$ | async; track group; let index = $index) {
+      @for (groupId of expandedGroupsOfEventPanel; track groupId; let index = $index) {
       <mat-tab>
         <ng-template mat-tab-label>
           <div class="bulletin-event-tab-label">
-            <span>group</span>
+            <span>{{ expandedGroupMapOfEventPanel[groupId].index }}</span>
             <button mat-raised-button class="bulletin-close-tab-button" (click)="closeTab(index)">
               <mat-icon>close</mat-icon>
             </button>
           </div>
         </ng-template>
         <div class="bulletin-tab-content">
-          {{ group | json }}
+          <app-event-group-tree [groupId]="groupId"></app-event-group-tree>
         </div>
       </mat-tab>
       }
